@@ -1,12 +1,13 @@
 <template>
   <div class="timeline">
-    <item v-for="(item , index) in collection" :key="index"/>
+    <item v-for="(item , index) in collection" :key="index" :produto.sync="item"/>
   </div>
 </template>
 
 <script>
 import eventos from '../services/eventos'
 import Item from './Item'
+import Utils from '../helpers/Utils'
 export default {
   name: 'Timeline',
 
@@ -25,11 +26,9 @@ export default {
       eventos.listar().then(res => {
         const { events: evento } = res.data
         
-        const order_by_timestamp = evento.sort(function(a,b) { 
-          return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime() 
-        })
+        const order_by_timestamp = Utils.OrderByDesc(evento)
         
-        this.collection = order_by_timestamp
+        this.collection = order_by_timestamp.filter(item => item.event === 'comprou')
       })
     }
   },
