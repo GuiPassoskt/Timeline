@@ -24,12 +24,12 @@
                 <th class="start">Produto</th>
                 <th class="end">Preço</th>
             </tr>
-            <tr>
+            <tr v-for="(p, index) in produto.products" :key="index">
                 <td class="start">
-                    Camisa Azul
+                    {{p.name}}
                 </td>
                 <td class="end">
-                    R$ 100,00
+                    {{p.price}}
                 </td>
             </tr>
         </table>
@@ -60,14 +60,8 @@
           }
         },
 
-        methods: {
-
-
-
-        },
-
         mounted () {
-          const produto = Utils.FormatJSON(this.produto)
+          const produto = this.produto
           this.product.store = produto.store_name
           this.product.hour = Utils.GetHourTime(produto.timestamp)
           this.product.date = Utils.GetDate(produto.timestamp)
