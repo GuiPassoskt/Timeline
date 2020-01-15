@@ -1,6 +1,6 @@
 <template>
   <div class="timeline">
-    <item v-for="(item , index) in collection.timeline" :key="index" :produto.sync="item"/>
+    <item v-for="(item , index) in collection" :key="index" :produto.sync="item"/>
   </div>
 </template>
 
@@ -53,11 +53,7 @@ export default {
 
         })
 
-        const result = {
-          timeline: Utils.OrderByDesc(timeline, 'timestamp')
-        }
-
-        this.collection = result
+        this.collection = Utils.OrderByDesc(timeline, 'timestamp')
 
       })
     }
