@@ -1,6 +1,6 @@
 <template>
   <div class="timeline">
-    <item v-for="(item , index) in collection" :key="index" :produto.sync="item"/>
+    <item v-for="(item , index) in collection.timeline" :key="index" :produto.sync="item"/>
   </div>
 </template>
 
@@ -25,10 +25,40 @@ export default {
     list () {
       eventos.listar().then(res => {
         const { events: evento } = res.data
+
+        const normalizeEvent = Utils.FormatJSON(evento)
         
-        const order_by_timestamp = Utils.OrderByDesc(evento)
-        
-        this.collection = order_by_timestamp.filter(item => item.event === 'comprou')
+        const comprou = normalizeEvent.filter(item => item.event === 'comprou')
+
+        const comprou_produto = normalizeEvent.filter(item => item.event === 'comprou-produto')
+
+        const timeline = comprou.map((item) => {
+          const produtos = comprou_produto.filter(itemp => itemp.transaction_id === item.transaction_id)
+
+          const items = {
+            timestamp: item.timestamp,
+            revenue: item.revenue,
+            transaction_id: item.transaction_id,
+            store_name: item.store_name
+          };
+
+          items.products = produtos.map((p) => {
+            return {
+              name: p.product_name,
+              price: p.product_price
+            }
+          });
+
+          return items
+
+        })
+
+        const result = {
+          timeline: Utils.OrderByDesc(timeline, 'timestamp')
+        }
+
+        this.collection = result
+
       })
     }
   },
