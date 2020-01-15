@@ -1,8 +1,8 @@
 const Utils = {
 
-    OrderByDesc (data) {
+    OrderByDesc (data, name) {
         return data.sort(function(a,b) { 
-            return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime() 
+            return new Date(b[name]).getTime() - new Date(a[name]).getTime() 
         })
     },
 
@@ -14,18 +14,23 @@ const Utils = {
         return new Date(date).getUTCDate() +'/'+ new Date(date).getMonth() +'/'+ new Date(date).getFullYear()
     },
 
-    FormatJSON (data) {
-        const object = {
-          timestamp: data.timestamp,
-          revenue: data.revenue
-        };
-
-        for (const customData of data.custom_data) {
-          object[customData.key] = customData.value;
+    FormatJSON: events => events.map((item) => {
+        const event = {
+          event: item.event,
+          timestamp: item.timestamp
         }
+    
+        if (item.revenue) {
+          event.revenue = item.revenue;
+        }
+    
+        for (let i = 0; i < item.custom_data.length; i++) {
+          event[item.custom_data[i].key] = item.custom_data[i].value;
+        }
+    
+        return event;
+    })
 
-        return object;
-    },
 }
 
 export default Utils
