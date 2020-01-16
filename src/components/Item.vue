@@ -1,5 +1,5 @@
 <template>
-    <div class="container right" :key="1">
+    <div class="container right">
       <div class="content">
         <div class="header">
             <div class="info">
@@ -16,23 +16,25 @@
             </div>
             <div class="info">
               <i class="icon money"></i>  
-              <span>R$ {{produto.revenue}}</span>
+              <span>{{ produto.revenue | FormatCurrency }}</span>
             </div>
         </div>
-        <table class="body">
-            <tr>
-                <th class="start">Produto</th>
-                <th class="end">Preço</th>
-            </tr>
-            <tr v-for="(p, index) in produto.products" :key="index">
-                <td class="start">
-                    {{p.name}}
-                </td>
-                <td class="end">
-                    {{p.price}}
-                </td>
-            </tr>
-        </table>
+        <div class="container-table">
+            <table class="body">
+                <tr>
+                    <th class="start">Produto</th>
+                    <th class="end">Preço</th>
+                </tr>
+                <tr v-for="(p, index) in produto.products" :key="index" class="border_top">
+                    <td class="start">
+                        {{p.name}}
+                    </td>
+                    <td class="end">
+                        {{p.price | FormatCurrency }}
+                    </td>
+                </tr>
+            </table>
+        </div>
       </div>
     </div>
 </template>
@@ -42,7 +44,7 @@
     import Utils from '../helpers/Utils'
     export default {
         name: 'Item',
-
+        mixins: [ Utils ],
         data () {
           return {
             product: {
@@ -129,20 +131,38 @@
     margin-bottom: 10px;
 }
 
-.body {
+.container-table {
     background-color: #f8f8f8;
-    padding: 20px;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
+    padding: 15px;
+}
+
+.body {
+    border-collapse: collapse;
     width: 100%;
+}
+
+.body tr {
+    padding: 20px;
 }
 
 .body tr th {
     font-size: 12px;
 }
 
-.body tr {
-    border-bottom: 1px solid #000;
+.body .border_top {
+    border-top: 1px solid #dbdfe5;
+    margin: 2px;
+}
+
+.body .border_top td {
+    padding: 5px;
+    margin: 5px;
+}
+
+.body tr th {
+    padding: 5px;
 }
 
 .body tr td {
@@ -229,6 +249,17 @@ i {
   
   .right {
     left: 0%;
+  }
+}
+@media (min-width: 320px) and (max-width: 480px) {
+  .header {
+      grid-template-columns: 1fr;
+  }
+
+  .info  {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      padding: 15px;
   }
 }
 </style>
