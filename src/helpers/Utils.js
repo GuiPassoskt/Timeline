@@ -1,4 +1,3 @@
-import moment from 'moment'
 
 const Utils = {
 
@@ -13,7 +12,16 @@ const Utils = {
     },
 
     GetDate (date) {
-      return moment(date).format('DD/MM/YYYY')
+     
+      let date_convert = new Date(date)
+      
+      let day = date_convert.getUTCDate()
+      let day_format = day.toString().length === 1 ? '0'+ day : day
+
+      let month = date_convert.getMonth()
+      let month_format = month.toString().length === 1 ? '0'+ month : month
+
+      return day_format +'/'+ month_format +'/'+ date_convert.getFullYear()
     },
 
     FormatJSON: events => events.map((item) => {
